@@ -21,7 +21,7 @@ module.exports = {
   },
   async getMentors(req, res) {
     try {
-      let data = await mentorService.getMentors(req.body)
+      let data = await mentorService.getMentors()
       return res.json({ status: true, message: "success", data: data })
     } catch (error) {
       return res.json({ status: false, error: error.message })
@@ -34,6 +34,14 @@ module.exports = {
     } catch (error) {
       return res.json({ status: false, error: error.message })
     }
-  }
+  },
+  async mentorTaskAssign(req, res) {
+    try {
+      let data = await mentorService.mentorTaskAssign(req.body)
+      return res.json({ status: true, message: "success" })
+    } catch (error) {
+      return res.json({ status: false, error: error.message })
+    }
+  },
 
 }

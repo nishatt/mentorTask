@@ -1,6 +1,4 @@
 const MentorModel = require('../models/Mentor')
-const mongoose = require('mongoose')
-const ObjectId = mongoose.Types.ObjectId
 module.exports = {
 
   async saveMentor(reqData) {
@@ -11,23 +9,23 @@ module.exports = {
     return await mentor.save()
   },
   async updateMentor(reqData, mentorId) {
-    console.log(reqData, mentorId)
-    let mentor = await MentorModel.findById(mentorId)
-    console.log(mentor)
-    if (!mentor) {
-      throw new Error("mentor doesn't exists")
-    }
-    mentor.name = reqData.name
-    mentor.qualification = reqData.qualification
-    return await mentor.save()
+    return await MentorModel.findOneAndUpdate({ _id: mentorId }, { $set: reqData }, { new: true })
   },
-  async getMentors(reqData) {
+  async getMentors() {
     return await MentorModel.find()
   },
   async deleteMentor(reqData) {
-    console.log("SDs", reqData)
-    return await MentorModel.remove({ _id: reqData.mentorId })
-
+    return await MentorModel.findByIdAndRemove({ _id: reqData.mentorId })
+  },
+  async mentorTaskAssign(reqData) {
+    let taskCount = await MentorModel.find({ taskIds: { $in: reqData.taskIds } }).count()
+    if (taskCount > 0) {
+      throw new Error("task is already assigned")
+    }
+    return await MentorModel.findOneAndUpdate(
+      { _id: reqData.mentorId },
+      { $push: { taskIds: { $each: reqData.taskIds } } }
+    )
   },
 
 }

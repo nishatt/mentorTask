@@ -3,18 +3,19 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const route = require('./router')
-const connect = require('./config')
+const config = require('./config')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 async function run() {
-  await mongoose.connect(connect.dbUrl, { useNewUrlParser: true })
+  let url = `mongodb://localhost:27017/${config.DB_NAME}`
+  await mongoose.connect(url, { useNewUrlParser: true })
   console.log("connected")
 
   app.use('/', route)
 
-  app.listen(3030, () => {
-    console.log("app is listening")
+  app.listen(config.PORT, () => {
+    console.log(`app is listening ${config.PORT}`)
   })
 
 }

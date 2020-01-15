@@ -10,11 +10,14 @@ const MentorSchema = new Schema({
   qualification: {
     type: String
   },
-  taskId: {
-    type: Schema.ObjectId,
-    ref: 'tasks'
+  taskIds: [{
+    type: mongoose.Types.ObjectId,
+    ref: 'Task'
+  }]
+},
+  {
+    timestamps: true
   }
+)
 
-})
-
-module.exports = Mentor = mongoose.model("mentors", MentorSchema)
+module.exports = mongoose.model("Mentor", MentorSchema)
